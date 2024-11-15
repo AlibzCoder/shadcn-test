@@ -1,25 +1,51 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
-import { Button } from "./components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { DataTableDemo } from "./DataTableDemo";
+import { ModeToggle } from "@/components/mode-toggle";
+import useTransactionsStore from "./store/transactions";
+import { fetchData } from "./lib/utils";
+import { Payment } from "./types/transactions";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const {
+    isLoading: isLoadingTransactions,
+    setTransactions,
+    setIsLoadingTransactions,
+  } = useTransactionsStore();
 
-  const isButtonLoading = count === 5;
+  useEffect(()=>{
+    LoadList()
+  },[])
+
+  function LoadList() {
+    if (!isLoadingTransactions) {
+      setIsLoadingTransactions(true);
+      fetchData("https://ce1b489e9446461588e26dedcb8c4af4.api.mockbin.io")
+        .then((data: Payment[] | any[]) => {
+          if (data && {}.toString.call(data) === "[object Array]")
+            setTransactions(data);
+        })
+        .finally(() => {
+          setIsLoadingTransactions(false);
+        });
+    }
+  }
 
   return (
     <>
-      <h1>Vite + React</h1>
+      <h1>ShadCN Test</h1>
+      <ModeToggle />
       <div className="card">
         <Button
-          loading={isButtonLoading}
-          disabled={isButtonLoading}
+          loading={isLoadingTransactions}
+          disabled={isLoadingTransactions}
           hideContentOnLoading={true}
-          onClick={() => setCount((count) => count + 1)}
+          onClick={LoadList}
         >
-          {`count is ${count}`}
+          {`Refresh`}
         </Button>
+        <DataTableDemo />
       </div>
     </>
   );
