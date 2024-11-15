@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "./App.css";
 import { Button } from "@/components/ui/button";
 import { DataTableDemo } from "./DataTableDemo";
-import { ModeToggle } from "@/components/mode-toggle";
+import ModeToggle from "@/components/mode-toggle";
 import useTransactionsStore from "./store/transactions";
 import { fetchData } from "./lib/utils";
 import { Payment } from "./types/transactions";
@@ -43,7 +43,7 @@ function App() {
           hideContentOnLoading={true}
           onClick={LoadList}
         >
-          {`Refresh`}
+          Refresh
         </Button>
         <DataTableDemo />
       </div>
